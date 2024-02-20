@@ -7,3 +7,16 @@ cd MTR_Handrail_Inspector2
 
  # Update repository
  git pull origin main 
+
+# install python and virtualenv
+sudo yum install python python-pip
+pip3 install virtualenv
+
+# Create virtual env
+python3 -m venv venv
+
+# install dependences
+pip3 install -r requirements.txt
+
+# Get requirements.txt in genreal format
+pip list --format=freeze > requirements.txt
