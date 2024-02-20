@@ -1,1 +1,3 @@
-test
+ssh -i C:\Users\marco\Downloads\HKPC_Share\MTR_Handrail_Inspector\AWS\10013828-mtr.pem ec2-user@18.163.208.22
+su - mtr
+cd MTR_Handrail_Inspector2
