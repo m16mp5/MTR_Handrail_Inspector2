@@ -20,3 +20,6 @@ pip3 install -r requirements.txt
 
 # Get requirements.txt in genreal format
 pip list --format=freeze > requirements.txt
+
+# install dependece before install mySQLClient
+sudo yum install python3-devel mysql-devel pkgconfig
