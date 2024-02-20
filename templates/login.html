@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div style="text-align: center; padding: 50px;">
+  <br><br>
+  <br><br>
+  <form action="" method="post">
+    <!-- <label for="username">User Name:</label> -->
+    User Name: <input type="text" name="username" value="" id="username" style="width: 200px;"> 
+    <br><br>
+    <!-- <label for="password">Password:</label> -->
+    &nbsp&nbsp&nbspPassword: <input type="password" name="password" value="" id="password" style="width: 200px;"> 
+    <br><br>
+    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="submit" value="Login">
+    {% csrf_token %}
+  </form>
+</div>
+{% endblock %}	
+
+

@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Dropdown select -->
+<nav class="nav justify-content-end" style="padding-top: 10px;"> 
+  <form class="d-flex form-inline" method="GET" action="../logs/">
+    {% comment %} {% csrf_token %} {% endcomment %}
+    <div class="mb-3" style="padding-right: 20px;">
+      <input class="form-control me-2" type="search" name='name' placeholder="Keyword Search" aria-label="Search">
+    </div>
+    <div class="mb-3" style="padding-right: 10px;">
+      <select name="selectedLine" id="lineBar" selected='selected' class="form-select form-select-sm selectpicker" aria-label=".form-select-sm example" style="width:auto; height:37px; display: inline; font-size: 16px;" >
+        {% for line in lineList %}
+          <option value="false" selected disabled hidden>Line</option>
+          <option value="{{ line }}">{{ line }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3" style="padding-right: 10px;">
+     <select name="selectedStation" id="stationBar" selected='selected' class="form-select form-select-sm" aria-label=".form-select-sm example" style="width:auto; height:37px; display: inline; font-size: 16px;" >
+      <option value="false" selected disabled hidden>Station</option>
+     </select>
+    </div>
+    <div class="mb-3" style="padding-right: 10px;">
+     <select name="selectedEscalatorNo" id="escBar" selected='selected' class="form-select form-select-sm" aria-label=".form-select-sm example" style="width:auto; height:37px; display: inline; font-size: 16px;" >
+      <option value="false" selected disabled hidden>Escalator No.</option>
+     </select>
+    </div>
+    <div class="mb-3" style="padding-right: 10px;">
+     <select name="selectedPosition" id="positionBar" selected='selected' class="form-select form-select-sm" aria-label=".form-select-sm example" style="width:auto; height:37px; display: inline; font-size: 16px;" >
+      <option value="false" selected disabled hidden>Position</option>
+     </select>
+    </div>
+     <div class="mb-3" style="padding-right: 10px;">
+     <select name="selectedDefectType" id="defectTypeBar" selected='selected' class="form-select form-select-sm" aria-label=".form-select-sm example" style="width:auto; height:37px; display: inline; font-size: 16px;" >
+      {% for defectType in defectTypeList %}
+        <option value="false" selected disabled hidden>Defect Type</option>
+        <option value="{{ defectType }}">{{ defectType }}</option>
+      {% endfor %}
+     </select>
+    </div>
+    <div class="col" style="padding-right: 10px; padding-right: 10px; width:auto; display: inline;">
+      <input type="text" name="dateRange" value="Select time period" style="width:230px; height:37px;">
+    </div>
+    <div style="padding-right: 10px; display: inline;">
+      <button class="btn btn-outline-dark btn-sm" name="search" type="submit">Search</button>&nbsp
+      <button class="btn btn-outline-dark btn-sm" name="export" type="submit">Export</button>
+    </div>
+  </form>
+</nav>
+
+<div id="result"></div>
+<!-- Table -->   
+<table class="table table-striped table-hover" style="text-align:center">
+  <thead>
+      <tr>
+        <th scope="col">Line</th>
+        <th scope="col">Station</th>
+        <th scope="col">Escalator No.</th>
+        <th scope="col">Position</th>
+        <th scope="col">Defect Type</th>
+        <th scope="col">Time Stamp</th>
+        <th scope="col">Distance from<br />Start Point(mm)</th>
+        <th scope="col">Speed(m/s)</th>
+        <th scope="col">Length(mm)</th>
+        <th scope="col">Width(mm)</th>
+        <th scope="col">Depth(mm)</th>
+        <th scope="col">Severity</th>
+        <th scope="col">Photo</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for defect in page %}
+      <tr>
+        <td>{{ defect.sDefectHandrailID.sLine }}</td>
+        <td>{{ defect.sDefectHandrailID.sStation }}</td>
+        <td>{{ defect.sDefectHandrailID.sEscNo }}</td>
+        <td>{{ defect.sDefectHandrailID.sPosition }}</td>
+        <td>{{ defect.sDefectDefectTypeID.sDefectTypeName }}</td>
+        <td>{{ defect.sDefectTimeStamp|date:"Y-m-d, D h:i A"}}</td>
+        <td>{{ defect.sDistanceFromStartPoint|floatformat:2 }}</td>
+        <td>{{ defect.sSpeed|floatformat:2 }}</td>
+        <td>{{ defect.sLength|floatformat:2 }}</td>
+        <td>{{ defect.sWidth|floatformat:2 }}</td>
+        <td>{{ defect.sDepth|floatformat:2 }}</td>
+        <td>
+          {% if defect.sSeverity == "Action" %}
+          <div style="color:red; font-weight: bold"> 
+          {% elif defect.sSeverity  == "Alarm" %}
+          <div style="color:brown; font-weight: bold"> 
+          {% elif defect.sSeverity  == "Alert" %}
+          <div style="color:orange; font-weight: bold">
+          {% elif defect.sSeverity  == "Fault" %}
+          <div style="color:purple; font-weight: bold"> 
+          {% else %} 
+          <div style="color:black">
+          {% endif %}
+            {{ defect.sSeverity }}
+        </div>
+        </td>
+        <td>
+          <button type="button" id="view" value="{{ defect.sDefectID }}" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#showDefectPhoto" data-item="http://127.0.0.1:8000/static/defectPhoto/{{ defect.sDefectPhotoLocation }}">View</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+
+<!-- Display Defect Photo in modal-->
+<div class="modal fade" id="showDefectPhoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <img id="imgData" src="" class="img-fluid rounded mx-auto d-block" alt="Defect Photo" width="300" height="600">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pagination -->
+<nav aria-label="Page navigation example" style="padding-right: 10px">
+  <ul class="pagination justify-content-end">
+      {% if page.has_previous %}
+          <li class="page-item">
+              {% if selectedLine == None %}
+              <a class="page-link" href="?dateRange={{dateRange}}&page_num={{ page.previous_page_number }}" aria-label="Previous">
+              {% else %}
+              <a class="page-link" href="?selectedLine={{selectedLine}}&dateRange={{dateRange}}&page_num={{ page.previous_page_number }}" aria-label="Previous">
+              {% endif %} 
+                  <span aria-hidden="true">&laquo;</span>
+              </a>
+          </li>
+      {% else %}
+          <li class="page-item disabled">
+              <a class="page-link" href="" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+              </a>
+          </li>
+      {% endif %}
+
+      {% for foo in page_range %}
+          {% if current_page == foo %}
+              <li class="page-item active">
+                {% if selectedLine == None %}
+                <a class="page-link" href="?dateRange={{dateRange}}&page_num={{ foo }}">{{ foo }}
+                {% else %} 
+                <a class="page-link" href="?selectedLine={{selectedLine}}&dateRange={{dateRange}}&page_num={{ foo }}">{{ foo }}
+                {% endif %}  
+                </a>
+              </li>
+          {% else %}
+              <li class="page-item">
+                {% if selectedLine == None %}
+                <a class="page-link" href="?dateRange={{dateRange}}&page_num={{ foo }}">{{ foo }}
+                {% else %} 
+                <a class="page-link" href="?selectedLine={{selectedLine}}&dateRange={{dateRange}}&page_num={{ foo }}">{{ foo }}
+                {% endif %}
+                </a>
+              </li>
+          {% endif %}
+      {% endfor %}
+
+      {% if page.has_next %}
+          <li class="page-item">
+              {% if berthID == None %}
+              <a class="page-link" href="?dateRange={{dateRange}}&page_num={{ page.next_page_number }}" aria-label="Next">
+              {% else %}
+              <a class="page-link" href="?berthID={{berthID}}&dateRange={{dateRange}}&page_num={{ page.next_page_number }}" aria-label="Next">
+              {% endif %}
+                  <span aria-hidden="true">&raquo;</span>
+              </a>
+          </li>
+      {% else %}
+          <li class="page-item disabled">
+              <a class="page-link" href="" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+              </a>
+          </li>
+      {% endif %}
+  </ul>
+</nav>
+
+{% endblock %}
+
+{% block scripts %} 
+<!-- Date range picker -->
+<script>
+  $(function () {
+    $('input[name="dateRange"]').daterangepicker({
+        showWeekNumbers: true,
+        showDropdowns: true,
+        linkedCalendars: false,
+        startDate: "2023-01-01",
+        minDate: "2023-01-01",
+        maxDate: "2025-12-31",
+        autoApply: true,
+        opens: "right",
+        locale: {
+          format: "YYYY-MM-DD",
+          separator: " to ",
+          fromLabel: "From",
+          toLabel: "To",
+          customRangeLabel: "Custom",
+          firstDay: 1,
+        },
+      },
+      function (start, end, label) {
+        console.log(
+          "A new date selection was made: " +
+            start.format("YYYY-MM-DD") +
+            " to " +
+            end.format("YYYY-MM-DD")
+        );
+      }
+    );
+  });
+</script>
+
+<!-- Display defect photo in modal -->
+<script>
+  $(document).ready(function() {
+    $('#showDefectPhoto').on('show.bs.modal', function(event) {
+      var button = $(event.relatedTarget);
+      var item = button.data('item');
+      console.log(item);
+      var modalImg = document.getElementById("imgData");
+      modalImg.src = item; 
+    });
+  });
+</script>
+
+<!-- Display value in station bar -->
+<script>
+  $(document).ready(function() {
+    $('#lineBar').change(function() {
+      var selectedLine = $(this).val();
+
+      $.ajax({
+        type: 'POST',
+        url: '{% url 'logs' %}',
+        data: { 'line': selectedLine },
+        success: function(response) {
+          console.log(response);
+          var stationSelect = $('#stationBar');
+          stationSelect.empty();
+          $.each(response, function(index, station) {
+            stationSelect.append('<option value="' + station.sStation + '">' + station.sStation + '</option>');
+          });
+        }
+      });
+    });
+  });
+</script>
+
+<!-- Display value in Escalator bar -->
+<script>
+  $(document).ready(function() {
+    $('#stationBar').change(function() {
+      var selectedStation = $(this).val();
+      var selectedLine = $('#lineBar').val();
+
+      console.log(selectedLine);
+      console.log(selectedStation);
+
+      $.ajax({
+        type: 'POST',
+        url: '{% url 'logs' %}',
+        data: { 
+                station: selectedStation, 
+                line: selectedLine,
+              },
+        success: function(response) {
+          console.log(response);
+          var escSelect = $('#escBar');
+          escSelect.empty();
+          $.each(response, function(index, esc) {
+            escSelect.append('<option value="' + esc.sEscNo + '">' + esc.sEscNo + '</option>');
+          });
+        }
+      });
+    });
+  });
+</script>
+
+<!-- Display value in Position bar -->
+<script>
+  $(document).ready(function() {
+    $('#escBar').change(function() {
+      var selectedEscNo = $(this).val();
+      var selectedLine = $('#lineBar').val();
+      var selectedStation = $('#stationBar').val();
+
+      console.log(selectedLine);
+      console.log(selectedStation);
+      console.log(selectedEscNo);
+
+      $.ajax({
+        type: 'POST',
+        url: '{% url 'logs' %}',
+        data: { 
+                escNo: selectedEscNo,
+                station: selectedStation, 
+                line: selectedLine,
+              },
+        success: function(response) {
+          console.log(response);
+          var positionSelect = $('#positionBar');
+          positionSelect.empty();
+          $.each(response, function(index, position) {
+            positionSelect.append('<option value="' + position.sPosition + '">' + position.sPosition + '</option>');
+          });
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+
+{% endblock scripts %}
+
+	
+
+
