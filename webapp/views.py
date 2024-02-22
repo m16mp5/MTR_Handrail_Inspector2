@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
+from django.contrib.auth import get_user_model
 
 # import DB tables
 from webapp.models import handrail
@@ -230,7 +231,7 @@ def getData(request):
         length = body["length"]
         width = body["width"]
         depth = body["depth"]
-        defectType = body["defectType"]
+        defectTypeName = body["defectType"]
         photoFileName = body["photoFileName"]
         photo = base64.b64decode(body["__photoFile"])
 
@@ -244,29 +245,29 @@ def getData(request):
         print(length)
         print(width)
         print(depth)
-        print(defectType)
-        print(photoFileName)
-        print(photo)
-
-        handrailID = handrail.objects.filter(sLine=line, sStation=station, sEscNo=escNo, sPosition=postion).values()
-        defectTypeName = defectType.objects.filter(sDefectTypeName=defectType).values()
-
-        print(handrailID)
         print(defectTypeName)
+        print(photoFileName)
 
-        inputPath = os.path.dirname(__file__) + '/static/defectPhoto/'
+        handrailID = handrail.objects.get(sLine=line, sStation=station, sEscNo=escNo, sPosition=postion)
+        defectTypeID = defectType.objects.get(sDefectTypeName=defectTypeName)
+        inputPath = os.getcwd() + '/static/defectPhoto/'
+
         with open(inputPath+photoFileName, 'wb') as f:
             f.write(photo)
         
-        p = defect(sDefectHandrailID=handrailID['sHandrailID'],
+
+        severity = "Normal"
+
+        p = defect(sDefectHandrailID=handrailID,
                    sDefectTimeStamp=fileTime, 
                    sLength=length,
                    sWidth=width,
                    sDepth=depth,
-                   sDefectDefectTypeID=defectTypeID['sDefectTypeID'],
+                   sDefectDefectTypeID=defectTypeID,
                    sDistanceFromStartPoint=distanceFromStartPoint,
                    sSpeed=speed,
-                   sDefectPhotoLocation=photoFileName)
+                   sDefectPhotoLocation=photoFileName,
+                   sSeverity=severity)
         p.save()
         print('data saved in DB')
 
