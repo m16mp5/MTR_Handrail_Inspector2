@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.conf import settings
 from django.contrib import auth
 from django.http import HttpResponse, JsonResponse
@@ -72,10 +72,11 @@ def logs(request):
         selected_line = request.POST.get('line')
         selected_station = request.POST.get('station')
         escList = handrail.objects.filter(sLine=selected_line, sStation=selected_station).values('sHandrailID','sEscNo').distinct().order_by('sEscNo')
+        print(escList)
         return JsonResponse(list(escList), safe=False)
     elif 'line' in request.POST:
         selected_line = request.POST.get('line')
-        stationList = handrail.objects.filter(sLine=selected_line).distinct().values('sHandrailID','sStation').order_by('sStation')
+        stationList = handrail.objects.filter(sLine=selected_line, sHandrailID__lte=120).distinct().values('sHandrailID','sStation').order_by('sStation')
         return JsonResponse(list(stationList), safe=False)
     
     # Search box 

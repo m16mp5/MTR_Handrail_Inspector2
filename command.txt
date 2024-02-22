@@ -1,6 +1,8 @@
-ssh -i C:\Users\marco\Downloads\HKPC_Share\MTR_Handrail_Inspector\AWS\10013828-mtr.pem ec2-user@18.163.208.22
+ssh -i C:\Users\marco\Downloads\HKPC_Share\MTR_Handrail_Inspector\AWS\10013828-mtr.pem ubuntu@18.163.206.148
 su - mtr
+source /venv/bin/activate
 cd MTR_Handrail_Inspector2
+sudo python3 manage.py runserver
 
 # Build origial repository
  git clone https://github.com/m16mp5/MTR_Handrail_Inspector2.git
