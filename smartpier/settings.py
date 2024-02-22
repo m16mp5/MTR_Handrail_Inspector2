@@ -172,3 +172,5 @@ SIMPLEUI_HOME_ICON = 'https://upload.wikimedia.org/wikipedia/en/b/b9/HK_MTR_logo
 SIMPLEUI_INDEX = ''
 
 
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
