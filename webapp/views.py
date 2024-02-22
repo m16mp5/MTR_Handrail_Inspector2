@@ -249,10 +249,10 @@ def getData(request):
         print(photo)
 
         handrailID = handrail.objects.filter(sLine=line, sStation=station, sEscNo=escNo, sPosition=postion).values()
-        defectTypeID = defectType.objects.filter(sDefectTypeID=defectType).values()
+        defectTypeName = defectType.objects.filter(sDefectTypeName=defectType).values()
 
         print(handrailID)
-        print(defectTypeID)
+        print(defectTypeName)
 
         inputPath = os.path.dirname(__file__) + '/static/defectPhoto/'
         with open(inputPath+photoFileName, 'wb') as f:
