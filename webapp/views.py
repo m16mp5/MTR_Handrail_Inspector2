@@ -67,6 +67,7 @@ def logs(request):
         selected_station = request.POST.get('station')
         selected_escNo = request.POST.get('escNo')
         positionList = handrail.objects.filter(sLine=selected_line, sStation=selected_station, sEscNo=selected_escNo).values('sHandrailID','sPosition').distinct().order_by('sPosition')
+        print(positionList)
         return JsonResponse(list(positionList), safe=False)
     elif 'station' in request.POST:
         selected_line = request.POST.get('line')
