@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'bootstrap5',                             # add bootstrap5
+    #'bootstrap5',                             # add bootstrap5
     'webapp',                                 # add webapp
 ]
 
