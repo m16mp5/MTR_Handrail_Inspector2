@@ -35,8 +35,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS=['https://handrail-portal.ddns.net']
 
-ADMINS = [('Marco', 'marcolun@hkpc.org')]
-
 # Application definition
 
 INSTALLED_APPS = [
