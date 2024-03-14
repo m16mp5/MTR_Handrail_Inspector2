@@ -49,7 +49,6 @@ def mylogout(request):
     logout(request)
     return redirect('/')
 
-
 @csrf_exempt
 @login_required(login_url="/")
 def logs(request):
@@ -59,25 +58,19 @@ def logs(request):
        
     # for rendering berth list to dropdown list in template
     lineList = handrail.objects.values_list('sLine', flat=True).distinct().order_by('sLine')
+    positionList = handrail.objects.values_list('sPosition', flat=True).distinct().order_by('sPosition')
     defectTypeList = defectType.objects.values_list('sDefectTypeName', flat=True).distinct().order_by('sDefectTypeName')
 
     # show lines and stations in drop-down list
-    if 'escNo' in request.POST:
+    if 'station' in request.POST:
         selected_line = request.POST.get('line')
         selected_station = request.POST.get('station')
-        selected_escNo = request.POST.get('escNo')
-        positionList = handrail.objects.filter(sLine=selected_line, sStation=selected_station, sEscNo=selected_escNo).values('sHandrailID','sPosition').distinct().order_by('sPosition')
-        print(positionList)
-        return JsonResponse(list(positionList), safe=False)
-    elif 'station' in request.POST:
-        selected_line = request.POST.get('line')
-        selected_station = request.POST.get('station')
-        escList = handrail.objects.filter(sLine=selected_line, sStation=selected_station).values('sHandrailID','sEscNo').distinct().order_by('sEscNo')
-        print(escList)
+        escList = handrail.objects.filter(sLine=selected_line, sStation=selected_station).values('sEscNo').distinct().order_by('sEscNo')
         return JsonResponse(list(escList), safe=False)
+    
     elif 'line' in request.POST:
         selected_line = request.POST.get('line')
-        stationList = handrail.objects.filter(sLine=selected_line, sHandrailID__lte=120).distinct().values('sHandrailID','sStation').order_by('sStation')
+        stationList = handrail.objects.filter(sLine=selected_line).values('sStation').distinct().order_by('sStation')
         return JsonResponse(list(stationList), safe=False)
     
     # Search box 
@@ -98,8 +91,6 @@ def logs(request):
                                                     Q(sDefectHandrailID__sPosition__icontains=keyWord) |
                                                     Q(sDefectDefectTypeID__sDefectTypeName__icontains=keyWord)                                      
                                                     )).order_by('sSeverity', '-sDefectTimeStamp')[:200]    
-        
-        
         
         # pagination
         current_page = int(request.GET.get('page_num', 1)) 
@@ -137,8 +128,8 @@ def logs(request):
         try:
             if selectedLine and selectedStation and selectedEscalatorNo and selectedPosition and selectedDefectType:
                 selectedHandrail = handrail.objects.filter(sLine=selectedLine, sStation=selectedStation, sEscNo=selectedEscalatorNo, sPosition=selectedPosition).values_list()
-            selectedDefectList = defect.objects.filter(sDefectHandrailID=selectedHandrail[0][0], sDefectTimeStamp__date__range=(startDate, endDate)).order_by('sSeverity', '-sDefectTimeStamp')[:200]
-            print(selectedDefectList)
+            defectDefectTypeID = defectType.objects.filter(sDefectTypeName=selectedDefectType).values_list()
+            selectedDefectList = defect.objects.filter(sDefectHandrailID=selectedHandrail[0][0], sDefectDefectTypeID=defectDefectTypeID[0][0], sDefectTimeStamp__date__range=(startDate, endDate)).order_by('sSeverity', '-sDefectTimeStamp')[:200]
         except:
             print("no data")
             
@@ -182,9 +173,10 @@ def logs(request):
         try:
             if selectedLine and selectedStation and selectedEscalatorNo and selectedPosition and selectedDefectType:
                 selectedHandrail = handrail.objects.filter(sLine=selectedLine, sStation=selectedStation, sEscNo=selectedEscalatorNo, sPosition=selectedPosition).values_list()
-            selectedDefectList = defect.objects.filter(sDefectHandrailID=selectedHandrail[0][0], sDefectTimeStamp__date__range=(startDate, endDate)).order_by('sSeverity', '-sDefectTimeStamp')[:200]
+            defectDefectTypeID = defectType.objects.filter(sDefectTypeName=selectedDefectType).values_list()
+            selectedDefectList = defect.objects.filter(sDefectHandrailID=selectedHandrail[0][0], sDefectDefectTypeID=defectDefectTypeID[0][0], sDefectTimeStamp__date__range=(startDate, endDate)).order_by('sSeverity', '-sDefectTimeStamp')[:200]
         except:
-            print("no data")         
+            print("no data")    
 
         filename = "Defect Data"
         response = HttpResponse(content_type='text/csv')
@@ -213,8 +205,6 @@ def logs(request):
         return response
 
     return render(request, 'logs.html', locals())
-
-
 
 @csrf_exempt
 def getData(request):

@@ -14,7 +14,7 @@ class UserAdmin(admin.ModelAdmin):
 class HandrailAdmin(admin.ModelAdmin):
     list_display = ['sHandrailID', 'sLine', 'sStation', 'sEscNo', 'sPosition']
     search_fields = ['sLine', 'sStation']
-    list_filter = ['sLine']
+    list_filter = ['sLine', 'sStation', 'sEscNo','sPosition']
     list_editable = ('sLine', 'sStation', 'sEscNo','sPosition')
     ordering = ('sHandrailID',)
 

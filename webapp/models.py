@@ -4,11 +4,11 @@ from django.contrib.auth import get_user_model
 #Create your models here.
 
 class handrail(models.Model):
-    sHandrailID = models.PositiveIntegerField(primary_key=True, verbose_name="#")
+    sHandrailID = models.AutoField(primary_key=True, verbose_name="#")
     sHandrailCode = models.CharField(max_length=50, null=False, verbose_name="Handrail Code")
     sLine = models.CharField(max_length=50, null=False, verbose_name="Line")
     sStation = models.CharField(max_length=50, null=False, verbose_name="Station")
-    sEscNo = models.PositiveIntegerField(null=False, verbose_name="Escalator No.")
+    sEscNo = models.CharField(max_length=50, null=False, verbose_name="Equipment No.")
     sPosition = models.CharField(max_length=10, null=False, verbose_name="Position")
 
 class defectType(models.Model):

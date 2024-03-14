@@ -30,7 +30,10 @@
     </div>
     <div class="mb-3" style="padding-right: 10px;">
      <select name="selectedPosition" id="positionBar" selected='selected' class="form-select form-select-sm" aria-label=".form-select-sm example" style="width:auto; height:37px; display: inline; font-size: 16px;" >
-      <option value="false" selected disabled hidden>Position</option>
+      {% for position in positionList %} 
+        <option value="false" selected disabled hidden>Position</option>
+        <option value="{{ position }}">{{ position }}</option>
+      {% endfor %}
      </select>
     </div>
      <div class="mb-3" style="padding-right: 10px;">
@@ -283,45 +286,6 @@
     });
   });
 </script>
-
-<!-- Display value in Position bar -->
-<script>
-  $(document).ready(function() {
-    $('#escBar').change(function() {
-      var selectedEscNo = $(this).val();
-      var selectedLine = $('#lineBar').val();
-      var selectedStation = $('#stationBar').val();
-
-      console.log(selectedLine);
-      console.log(selectedStation);
-      console.log(selectedEscNo);
-
-      $.ajax({
-        type: 'POST',
-        url: '{% url 'logs' %}',
-        data: { 
-                escNo: selectedEscNo,
-                station: selectedStation, 
-                line: selectedLine,
-              },
-        success: function(response) {
-          console.log(response);
-          var positionSelect = $('#positionBar');
-          positionSelect.empty();
-          $.each(response, function(index, position) {
-            positionSelect.append('<option value="' + position.sPosition + '">' + position.sPosition + '</option>');
-          });
-        }
-      });
-    });
-  });
-</script>
-
-
-
-
-
-
 
 {% endblock scripts %}
 
