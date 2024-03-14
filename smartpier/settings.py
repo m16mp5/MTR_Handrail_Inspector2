@@ -38,7 +38,7 @@ CSRF_TRUSTED_ORIGINS=['http://handrail-portal.ddns.net']
 # Application definition
 
 INSTALLED_APPS = [
-    'simpleui',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,8 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    #'bootstrap5',                             # add bootstrap5
-    'webapp',                                 # add webapp
+    'webapp', 
+    'simpleui',                                
 ]
 
 MIDDLEWARE = [
