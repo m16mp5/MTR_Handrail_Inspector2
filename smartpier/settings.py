@@ -33,7 +33,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS=['https://handrail-portal.ddns.net']
+CSRF_TRUSTED_ORIGINS=['http://handrail-portal.ddns.net']
 
 # Application definition
 

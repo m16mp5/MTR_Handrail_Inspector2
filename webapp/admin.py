@@ -2,8 +2,6 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from webapp.models import handrail, defectType, defectTypeThreshold
 
-
-
 class UserAdmin(admin.ModelAdmin):
     list_display = ['username','first_name','last_name','is_staff']
     ordering=('username',)
@@ -29,8 +27,9 @@ class DefectThresholdAdmin(admin.ModelAdmin):
     list_editable = ('sThresholdDefectTypeID', 'sSeverity', 'sLengthThreshold', 'sWidthhThreshold','sDepthThreshold')
     ordering = ('sDefectTypeThresholdID',)
 
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
+
+#admin.site.unregister(User)
+#admin.site.register(User, UserAdmin)
 
 admin.site.site_header = 'MTR Handrail Defect Management Portal'
 admin.site.site_title = 'MTR Handrail Defect Management Portal'
