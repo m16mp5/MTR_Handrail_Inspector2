@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'bootstrap5',                             # add bootstrap5
     'webapp',                                 # add webapp
 ]
@@ -169,7 +170,6 @@ SIMPLEUI_ANALYSIS = False
 SIMPLEUI_HOME_TITLE = 'MTR Handrail Defect Management Portal' 
 SIMPLEUI_HOME_ICON = 'https://upload.wikimedia.org/wikipedia/en/b/b9/HK_MTR_logo.svg' 
 
-SIMPLEUI_INDEX = ''
+SIMPLEUI_INDEX = '/logs'
 
 
-SECURE_CROSS_ORIGIN_OPENER_POLICY = None
