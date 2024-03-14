@@ -28,8 +28,8 @@ class DefectThresholdAdmin(admin.ModelAdmin):
     ordering = ('sDefectTypeThresholdID',)
 
 
-#admin.site.unregister(User)
-#admin.site.register(User, UserAdmin)
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
 
 admin.site.site_header = 'MTR Handrail Defect Management Portal'
 admin.site.site_title = 'MTR Handrail Defect Management Portal'
