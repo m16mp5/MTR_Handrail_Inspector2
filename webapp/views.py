@@ -26,7 +26,6 @@ from datetime import datetime
 
 from django.views.decorators.csrf import csrf_exempt
 
-@csrf_exempt
 def login(request):
 
     if request.user.is_authenticated:
@@ -49,7 +48,7 @@ def mylogout(request):
     logout(request)
     return redirect('/')
 
-@csrf_exempt
+
 @login_required(login_url="/")
 def logs(request):
 

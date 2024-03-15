@@ -6,6 +6,7 @@
   <br><br>
   <br><br>
   <form action="" method="post">
+    {% csrf_token %}
     <!-- <label for="username">User Name:</label> -->
     User Name: <input type="text" name="username" value="" id="username" style="width: 200px;"> 
     <br><br>
